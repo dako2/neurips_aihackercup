@@ -1,12 +1,21 @@
-3
-import math
+def calculate_p_increase(n, p):
+    """Calculates the increase in P needed to have the same success rate as typing one fewer line.
 
-def calculate_increase(n, p):
-    return math.sqrt(p / 100) * math.sqrt(100 - p) * (n - 1) / n
+    Args:
+        n: The original number of lines.
+        p: The original probability of typing a line correctly.
 
-T = int(input())
+    Returns:
+        The increase in P needed.
+    """
 
-for i in range(1, T + 1):
-    N, P = map(int, input().split())
-    increase = calculate_increase(N, P)
+    p_new = (p / 100)**(n / (n - 1))  # Success probability with n-1 lines is same as success prob with n lines
+    p_new_percentage = p_new * 100
+    return p_new_percentage - p
+
+t = int(input())
+
+for i in range(1, t + 1):
+    n, p = map(int, input().split())
+    increase = calculate_p_increase(n, p)
     print(f"Case #{i}: {increase}")

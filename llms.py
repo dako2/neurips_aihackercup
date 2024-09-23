@@ -4,7 +4,7 @@ import openai
 import google.generativeai as genai
 from dotenv import load_dotenv
 import ollama
-
+import time
 # Load environment variables from .env file
 load_dotenv()
 
@@ -114,6 +114,7 @@ class LLM:
 
     def gemini(self, prompt):
         """Call the Gemini model."""
+        time.sleep(2)
         if not self.gemini_model:
             raise RuntimeError("Gemini model is not initialized.")
         

@@ -1,56 +1,56 @@
-def solve():
-    import sys
-    input = sys.stdin.read
-    data = input().split()
-    
-    index = 0
-    T = int(data[index])
-    index += 1
-    results = []
-    
-    from sortedcontainers import SortedDict
-    
-    for case_number in range(1, T + 1):
-        N = int(data[index])
-        G = int(data[index + 1])
-        index += 2
-        energies = []
-        
-        for i in range(N):
-            E = int(data[index])
-            energies.append((E, i + 1))  # We shuttle energy and original index
-            index += 1
+def solve_curling(N, G, energies):
+    """
+    Solves the curling problem for a single test case.
 
-        # Sort energies by the amount of energy (ascending)
-        energies.sort()
-        
-        final_positions = SortedDict()
-        final_info = [None] * (N + 1)  # Store (position, index) for easier result fetching
-        
-        for energy, stone_index in energies:
-            position = energy
-            
-            # Simulation of collision and carry
-            while position in final_positions:
-                carried_energy = position - final_positions[position] + 1
-                final_positions.pop(position)  # This stone will move further
-                position += carried_energy
-            
-            final_positions[position] = position  # Now this stone settles here
-            final_info[stone_index] = (position, stone_index)
-        
-        # Find the stone that is closest to G
-        closest_distance = float('inf')
-        closest_stone_index = None
-        
-        for stone_index in range(1, N + 1):
-            position, idx = final_info[stone_index]
-            distance = abs(position - G)
-            if distance < closest_distance or (distance == closest_distance and stone_index < closest_stone_index):
-                closest_distance = distance
-                closest_stone_index = stone_index
-        
-        results.append(f"Case #{case_number}: {closest_stone_index} {closest_distance}")
+    Args:
+        N: The number of stones.
+        G: The goal position.
+        energies: A list of energies for each stone.
 
-    # Print all results at once to respect the Large I/O operations
-    sys.stdout.write("\n".join(results) + "\n")
+    Returns:
+        A tuple containing the index of the closest stone to the goal and its distance.
+    """
+    # Sort stones by energy to simulate collisions in order of energy
+    sorted_energies = sorted(enumerate(energies), key=lambda x: x[1], reverse=True)
+    # Initialize the positions of all stones to 0
+    positions = [0] * N
+    # Keep track of the closest stone and its distance
+    closest_stone = 0
+    min_distance = G  # Initialize to the maximum possible distance
+    
+    # Simulate the movement of the stones
+    for i, (stone_index, energy) in enumerate(sorted_energies):
+        current_position = positions[stone_index]
+        while energy > 0:
+            # Move the stone one unit if possible
+            if current_position + 1 <= G:
+                current_position += 1
+                energy -= 1
+            # Collision with a stationary stone, transfer energy
+            else:
+                break
+        # Update the position of the stone
+        positions[stone_index] = current_position
+        # Update the closest stone if necessary
+        distance = abs(current_position - G)
+        if distance < min_distance:
+            min_distance = distance
+            closest_stone = stone_index
+        elif distance == min_distance and stone_index < closest_stone:
+            closest_stone = stone_index
+
+    return closest_stone + 1, min_distance
+
+# Read input from the user
+T = int(input())
+
+# Solve each test case
+for i in range(1, T + 1):
+    N, G = map(int, input().split())
+    energies = []
+    for _ in range(N):
+        energies.append(int(input()))
+    # Solve the case
+    closest_stone, distance = solve_curling(N, G, energies)
+    # Print the output
+    print(f"Case #{i}: {closest_stone} {distance}")

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 import pathlib
 import re
+
 class Problem(BaseModel):
     problem_dir: pathlib.Path = Field(
         ..., description="The path to the problem directory"
@@ -15,6 +16,9 @@ class Problem(BaseModel):
     full_output: pathlib.Path = Field(..., description="The path to the output file")
     code_path: pathlib.Path = Field(..., description="The path to the output code file")
     code: str = Field(..., description="The generated source code")
+    best_score: int = Field(..., description="The best score of the solution")
+    best_code_path: pathlib.Path = Field(..., description="The path to the output code file")
+    best_full_out_path: pathlib.Path = Field(..., description="The path to the output code file")
     @property
     def as_xml(self) -> str:
         return f"""
@@ -42,6 +46,9 @@ def load_problem(problem_name: str, problem_dir: pathlib.Path) -> Problem:
     sample_output_path = problem_dir / f"sample_out.txt"
     problem_description = problem_dir / f"statement.txt"
     code_path = problem_dir / f"{problem_name}.py"
+    best_score = 0.0
+    best_code_path  =  f"to_submit/{problem_name}.py"
+    best_full_out_path = f"to_submit/{problem_name}_full_out.txt"
     return Problem(
         problem_dir=problem_dir,
         problem_name=problem_name,
@@ -54,6 +61,9 @@ def load_problem(problem_name: str, problem_dir: pathlib.Path) -> Problem:
         full_output=full_output, # to generate
         code_path = code_path,
         code = '',
+        best_score = best_score,
+        best_code_path = best_code_path,
+        best_full_out_path = best_full_out_path,
     )
 
 def load_problem_from_folder(main_dir_path: str, selected_question: int) -> Problem:

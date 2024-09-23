@@ -9,7 +9,7 @@ The \(i\)th stone will be thrown with energy \(E_i\), and will travel \(E_i\) un
 After all of the stones are thrown, which stone is closest to the goal position \(G\), and how far away from the goal is it?
 
 # Constraints
-\(1 \leq T \leq 85\)
+\(1 \leq T \leq 80\)
 \(1 \leq N \leq 300{,}000\)
 \(1 \leq G \leq 1{,}000{,}000\)
 \(N \leq E_i \leq 1{,}000{,}000\)

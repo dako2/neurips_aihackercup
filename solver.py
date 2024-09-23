@@ -5,7 +5,6 @@ import logging
 import re
 
 # TODO to add back image usage
-
 def verify_code_syntax(code_str):
     try:
         compile(code_str, '<string>', 'exec')
@@ -40,10 +39,8 @@ def solve_problem(problem: Problem, model_name: str, use_images=False, timeout=6
         return {"code": code, "code_path": problem.code_path, "problem": problem}
     else:
         return None
-
-
+    
 # generate_code function to call llm once and generate code solution
-
 def generate_code(
     problem: Problem,
     llm: LLM, 
@@ -73,15 +70,13 @@ def generate_code(
 
     # further clean-up for corner-case. in case we have ```python stuff...`
     solution = maybe_remove_backticks(solution)
-
     return solution
 
-
 # other supportive functions for solve_problems
-
 def maybe_remove_backticks(solution: str) -> str:
     "Remove backticks from the solution"
     solution = solution.strip()
     solution = re.sub(r'^```python\s*', '', solution)
     solution = re.sub(r'\s*```$', '', solution)
     return solution
+
